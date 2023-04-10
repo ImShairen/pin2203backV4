@@ -17,18 +17,17 @@ class ContactoController extends Controller
         $contacto->phone=$req->phone;
 
         $data=$contacto->save();
-        if(!$data)
-        {
+
+        $details = [
+            'title' => 'New contact: ' . $contacto->name,
+            'body' => 'Email: ' . $contacto->email,
+            'body1' => 'Phone: ' . $contacto->phone,
+        ];
+        \Mail::to('ezedemartin@gmail.com')->send(new \App\Mail\SendPost($details));
+
         return response()->json([
-            'status'=>400,
-            'error'=> 'something went wrong'
+            'mensaje' => 'Se Agregó Correctamente al Contacto',
+            'data' => $contacto,
         ]);
-    }
-    else{
-        return response()->json([
-            'status'=>200,
-            'message'=>'Data successfully saved'
-        ]);
-    }
-    }
+}
 }
